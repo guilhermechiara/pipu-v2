@@ -17,10 +17,15 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "prettier": "^3.5.3",
-    "turbo": "^2.4.4"
+    "turbo": "^2.5.0"
   },
   "packageManager": "pnpm@10.7.0",
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
+    "dayjs": "^1.11.13",
+    "zod": "^3.25.23"
   }
 }

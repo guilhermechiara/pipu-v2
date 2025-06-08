@@ -1,21 +1,25 @@
+const eslintPluginPrettierRecommended = require("eslint-plugin-prettier/recommended");
+
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
+  eslintPluginPrettierRecommended,
   extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
-    'prettier',
-    'turbo',
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "prettier",
+    "turbo",
   ],
-  plugins: ['@typescript-eslint/eslint-plugin'],
-  parser: '@typescript-eslint/parser',
+  plugins: ["@typescript-eslint/eslint-plugin"],
+  parser: "@typescript-eslint/parser",
   ignorePatterns: [
-    '.*.js',
-    '*.setup.js',
-    '*.config.js',
-    '.turbo/',
-    'dist/',
-    'coverage/',
-    'node_modules/',
+    ".*.js",
+    "*.setup.js",
+    "*.config.js",
+    ".turbo/",
+    "dist/",
+    "coverage/",
+    "node_modules/",
   ],
 };
