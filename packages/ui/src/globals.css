@@ -124,6 +124,7 @@
     --color-success-foreground: var(--color-white);
 
     --color-pipu-cyan: oklch(0.8928 0.0463 206.57);
+    --color-pipu-secondary-text: oklch(0.1904 0.0069 258.37);
 }
 
 @layer base {
@@ -134,4 +135,15 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+@layer utilities {
+    .popover-content-width-full {
+        width: var(--radix-popover-trigger-width);
+        max-height: var(--radix-popover-content-available-height);
+    }
+}
+
+:where(button, [role="button"]):not([disabled]) {
+    cursor: pointer;
 }

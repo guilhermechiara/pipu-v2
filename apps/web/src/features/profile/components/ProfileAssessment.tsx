@@ -1,5 +1,5 @@
 import { ProfileAssessmentCompleted } from "./ProfileAssessmentCompleted";
-import { Employee } from "../../employees/types/employee";
+import { Employee } from "../../employees/types/Employee";
 import { ProfileNoAssessment } from "./ProfileNoAssessment";
 import { useMyAssessments } from "../../assessments/hooks/useMyAssessments";
 

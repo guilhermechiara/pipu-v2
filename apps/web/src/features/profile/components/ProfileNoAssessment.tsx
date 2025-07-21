@@ -1,8 +1,8 @@
-import { Employee } from "../../employees/types/employee";
+import { Employee } from "../../employees/types/Employee";
 import { Title } from "@pipu/ui/components";
-import { MyCurrentAssessmentCycleCard } from "../../assessment-cycles/components/MyCurrentAssessmentCycleCard";
+import { MyCurrentCycleCard } from "../../cycles/components/MyCurrentCycleCard";
 import { Suspense } from "react";
-import { MyCurrentAssessmentCycleCardSkeleton } from "../../assessment-cycles/components/skeletons/MyCurrentAssessmentCycleCardSkeleton";
+import { MyCurrentCycleCardSkeleton } from "../../cycles/components/skeletons/MyCurrentCycleCardSkeleton";
 import { MyRoleDetails } from "../../roles/components/MyRoleDetails";
 import { MyRoleDetailsSkeleton } from "../../roles/components/skeletons/MyRoleDetailsSkeleton";
 
@@ -13,8 +13,8 @@ interface ProfileNoAssessmentProps {
 const ProfileNoAssessment = ({ employee }: ProfileNoAssessmentProps) => {
   return (
     <div className="flex flex-col gap-8">
-      <Suspense fallback={<MyCurrentAssessmentCycleCardSkeleton />}>
-        <MyCurrentAssessmentCycleCard />
+      <Suspense fallback={<MyCurrentCycleCardSkeleton />}>
+        <MyCurrentCycleCard />
       </Suspense>
 
       <Title as="h3">Sobre seu cargo atual</Title>
