@@ -28,8 +28,10 @@ export async function EmployeeTable() {
   const data = await getData();
 
   return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={data} />
-    </div>
+    <>
+      <div className="container mx-auto py-10">
+        <DataTable columns={columns} data={data} />
+      </div>
+    </>
   );
 }

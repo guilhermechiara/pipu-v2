@@ -17,6 +17,7 @@ export * from "./Dialog";
 export * from "./DropdownMenu";
 export * from "./Select";
 export * from "./SearchableSelect";
+export * from "./Avatar";
 
 export * from "./labels";
 export * from "./inputs";

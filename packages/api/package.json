@@ -1,5 +1,5 @@
 {
-  "name": "@repo/api",
+  "name": "@pipu/api",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
@@ -16,21 +16,16 @@
   "publishConfig": {
     "access": "public"
   },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "src/*"
-      ]
-    }
-  },
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.js"
     },
     "./*": {
-      "import": "./dist/*.js",
-      "require": "./dist/*.js"
+      "types": "./dist/*.d.ts",
+      "require": "./dist/*.js",
+      "import": "./dist/*.js"
     }
   },
   "dependencies": {

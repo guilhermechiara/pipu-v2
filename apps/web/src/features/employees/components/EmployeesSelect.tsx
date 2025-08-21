@@ -8,9 +8,10 @@ import { useEmployeesSelectQuery } from "../hooks/useEmployeesSelectQuery";
 
 interface EmployeesSelectProps {
   field: ControllerRenderProps<any, any>;
+  placeholder?: string;
 }
 
-export function EmployeesSelect({ field }: EmployeesSelectProps) {
+export function EmployeesSelect({ field, placeholder }: EmployeesSelectProps) {
   const [query, setQuery] = useState<string>();
   const { data, isLoading } = useEmployeesSelectQuery({ search: query });
 
@@ -23,7 +24,7 @@ export function EmployeesSelect({ field }: EmployeesSelectProps) {
       }))}
       isSearching={isLoading}
       onSearch={(value: string) => setQuery(value)}
-      placeholder="Selecione uma liderança"
+      placeholder={placeholder ? placeholder : `Selecione um colaborador`}
     />
   );
 }

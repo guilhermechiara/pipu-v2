@@ -8,9 +8,10 @@ import { useRolesSelectQuery } from "../hooks/useRolesSelectQuery";
 
 interface EmployeesSelectProps {
   field: ControllerRenderProps<any, any>;
+  placeholder?: string;
 }
 
-export function RolesSelect({ field }: EmployeesSelectProps) {
+export function RolesSelect({ field, placeholder }: EmployeesSelectProps) {
   const [query, setQuery] = useState<string>();
   const { data, isLoading } = useRolesSelectQuery({ search: query });
 
@@ -23,7 +24,7 @@ export function RolesSelect({ field }: EmployeesSelectProps) {
       }))}
       isSearching={isLoading}
       onSearch={(value: string) => setQuery(value)}
-      placeholder="Selecione uma liderança"
+      placeholder={placeholder ? placeholder : `Selecione uma posição`}
     />
   );
 }

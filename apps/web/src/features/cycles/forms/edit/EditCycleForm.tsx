@@ -17,11 +17,11 @@ import { useEditAssessmentCycle } from "../../hooks/useEditAssessmentCycle";
 import {
   SuccessDialog,
   SuccessDialogRef,
-} from "../../../../components/layout/SuccessDialog";
+} from "../../../../components/dialogs/SuccessDialog";
 import {
   ConfirmationDialog,
   ConfirmationDialogRef,
-} from "../../../../components/layout/ConfirmationDialog";
+} from "../../../../components/dialogs/ConfirmationDialog";
 import { useAssessmentCycle } from "../../hooks/useAssessmentCycle";
 import dayjs from "dayjs";
 

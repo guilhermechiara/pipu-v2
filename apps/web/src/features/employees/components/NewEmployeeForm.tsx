@@ -24,7 +24,8 @@ import { useEmployeeMutation } from "../hooks/useEmployeeMutation";
 import {
   SuccessDialog,
   SuccessDialogRef,
-} from "../../../components/layout/SuccessDialog";
+} from "../../../components/dialogs/SuccessDialog";
+import { useRouter } from "next/navigation";
 
 type NewEmployeeFormValues = z.infer<typeof newCycleFormSchema>;
 
@@ -41,6 +42,7 @@ const newCycleFormSchema = z.object({
 export const NewEmployeeForm = () => {
   const { isPending, isSuccess, isError, mutate } = useEmployeeMutation();
   const successDialogRef = useRef<SuccessDialogRef>(null);
+  const router = useRouter();
 
   const form = useForm<NewEmployeeFormValues>({
     resolver: standardSchemaResolver(newCycleFormSchema),
@@ -55,7 +57,13 @@ export const NewEmployeeForm = () => {
     },
   });
 
-  function onSubmit(data: NewEmployeeFormValues) {
+  useEffect(() => {
+    if (isSuccess) {
+      successDialogRef.current?.show();
+    }
+  }, [isSuccess]);
+
+  function handleSubmit(data: NewEmployeeFormValues) {
     console.log(data);
 
     mutate({
@@ -69,17 +77,15 @@ export const NewEmployeeForm = () => {
     });
   }
 
-  useEffect(() => {
-    if (isSuccess) {
-      successDialogRef.current?.show();
-    }
-  }, [isSuccess]);
+  function handleClose() {
+    router.push("/employees");
+  }
 
   return (
     <>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(handleSubmit)}
           className="w-full flex flex-col gap-8"
         >
           <FormField
@@ -207,6 +213,7 @@ export const NewEmployeeForm = () => {
         ref={successDialogRef}
         message="Agora você pode visualizar a mudança na tela de Gestão de Pessoas."
         title="Pessoa adicionada com sucesso!"
+        onClose={handleClose}
       />
     </>
   );

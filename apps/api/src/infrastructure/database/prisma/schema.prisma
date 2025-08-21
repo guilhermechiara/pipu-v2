@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id               String     @id @unique
+  tradingName      String     @map("trading_name") @db.Text
+  legalName        String     @map("legal_name") @db.Text
+  slug             String     @db.Text
+  document         String     @unique @db.Text
+  status           String     @db.Text
+  documentType     String     @map("document_type") @db.Text
+  financialContact String     @map("financial_contact") @db.Text
+  externalId       String     @unique @map("external_id") @db.Text
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt() @map("updated_at")
+  employees        Employee[]
+  users            User[]
+
+  @@map("organizations")
+}
+
+model User {
+  id             String       @unique @db.Text
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id") @db.Text
+  externalId     String?      @unique @map("external_id") @db.Text
+  email          String       @db.Text
+  status         String       @db.Text
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt() @map("updated_at")
+  employees      Employee[]
+
+  @@map("users")
+}
+
+model Employee {
+  id             String       @id @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id") @db.Text
+  user           User?        @relation(fields: [userId], references: [id])
+  userId         String       @map("user_id") @db.Text
+  fullName       String       @map("full_name") @db.Text
+  status         String       @db.Text
+  email          String       @db.Text
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt() @map("updated_at")
+
+  @@map("employees")
+}

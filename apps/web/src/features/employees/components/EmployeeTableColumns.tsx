@@ -11,6 +11,12 @@ import {
 } from "@pipu/ui/components";
 import { MoreVertical } from "lucide-react";
 import { Employee } from "../types/Employee";
+import { useState } from "react";
+import { UpdateEmployeePeoplePartner } from "./UpdateEmployeePeoplePartner";
+import { ActionDialog } from "../../../components/dialogs/ActionDialog";
+import { UpdateEmployeeLeader } from "./UpdateEmployeeLeader";
+import { UpdateEmployeeRole } from "./UpdateEmployeeRole";
+import { UpdateEmployeeSalary } from "./UpdateEmployeeSalary";
 
 export const columns: ColumnDef<Employee>[] = [
   {
@@ -49,6 +55,12 @@ export const columns: ColumnDef<Employee>[] = [
     id: "actions",
     header: () => <div className="text-right">Ações</div>,
     cell: ({ row }) => {
+      const [peoplePartnerDialogOpen, setPeoplePartnerDialogOpen] =
+        useState(false);
+      const [leaderDialogOpen, setLeaderDialogOpen] = useState(false);
+      const [salaryDialogOpen, setSalaryDialogOpen] = useState(false);
+      const [roleDialogOpen, setRoleDialogOpen] = useState(false);
+
       const payment = row.original;
 
       return (
@@ -62,16 +74,66 @@ export const columns: ColumnDef<Employee>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
+                onSelect={() => setPeoplePartnerDialogOpen(true)}
               >
                 Editar BP de RH
               </DropdownMenuItem>
-              <DropdownMenuItem>Editar liderança</DropdownMenuItem>
-              <DropdownMenuItem>Editar salário</DropdownMenuItem>
-              <DropdownMenuItem>Editar cargo</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setLeaderDialogOpen(true)}>
+                Editar liderança
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSalaryDialogOpen(true)}>
+                Editar salário
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setRoleDialogOpen(true)}>
+                Editar cargo
+              </DropdownMenuItem>
               <DropdownMenuItem>Desligar</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <ActionDialog
+            title="Editar BP de RH"
+            open={peoplePartnerDialogOpen}
+            onOpenChange={setPeoplePartnerDialogOpen}
+          >
+            <UpdateEmployeePeoplePartner
+              employeeId={row.original.id}
+              onSuccess={() => setPeoplePartnerDialogOpen(false)}
+            />
+          </ActionDialog>
+
+          <ActionDialog
+            title="Editar liderança"
+            open={leaderDialogOpen}
+            onOpenChange={setLeaderDialogOpen}
+          >
+            <UpdateEmployeeLeader
+              employeeId={row.original.id}
+              onSuccess={() => setLeaderDialogOpen(false)}
+            />
+          </ActionDialog>
+
+          <ActionDialog
+            title="Editar posição"
+            open={roleDialogOpen}
+            onOpenChange={setRoleDialogOpen}
+          >
+            <UpdateEmployeeRole
+              employeeId={row.original.id}
+              onSuccess={() => setRoleDialogOpen(false)}
+            />
+          </ActionDialog>
+
+          <ActionDialog
+            title="Editar salário"
+            open={salaryDialogOpen}
+            onOpenChange={setSalaryDialogOpen}
+          >
+            <UpdateEmployeeSalary
+              employeeId={row.original.id}
+              onSuccess={() => setSalaryDialogOpen(false)}
+            />
+          </ActionDialog>
         </div>
       );
     },

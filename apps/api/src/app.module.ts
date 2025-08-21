@@ -1,13 +1,22 @@
-import { Module } from '@nestjs/common';
-
-import { LinksModule } from './links/links.module';
-
-import { AppService } from './app.service';
-import { AppController } from './app.controller';
+import { Module } from "@nestjs/common";
+import { EmployeesModule } from "./modules/employees/employees.module";
+import { DatabaseModule } from "./infrastructure/database/database.module";
+import { ConfigModule } from "@nestjs/config";
+import { databaseConfig } from "./config";
+import { MessagingModule } from "./infrastructure/messaging/messaging.module";
+import { OrganizationsModule } from "@app/modules/organizations/organizations.module";
+import { AuthModule } from "@app/modules/auth/auth.module";
 
 @Module({
-  imports: [LinksModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    MessagingModule.forRoot(),
+    ConfigModule.forRoot({
+      load: [databaseConfig],
+    }),
+    AuthModule,
+    DatabaseModule,
+    OrganizationsModule,
+    EmployeesModule,
+  ],
 })
 export class AppModule {}

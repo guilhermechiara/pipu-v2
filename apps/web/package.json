@@ -30,7 +30,7 @@
     "@jest/globals": "^29.7.0",
     "@next/eslint-plugin-next": "^15.3.1",
     "@playwright/test": "^1.52.0",
-    "@repo/api": "workspace:*",
+    "@pipu/api": "workspace:*",
     "@repo/eslint-config": "workspace:*",
     "@repo/jest-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
