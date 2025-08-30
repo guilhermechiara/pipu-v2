@@ -7,7 +7,7 @@ import {
 } from "@nestjs/common";
 import { databaseConfig } from "../../config";
 import * as config from "@nestjs/config";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class PrismaService
@@ -46,6 +46,10 @@ export class PrismaService
       this.logger.error("Failed to connect to database", error);
       throw error;
     }
+  }
+
+  public getClient(tx?: Prisma.TransactionClient) {
+    return tx || this;
   }
 
   async onModuleDestroy() {

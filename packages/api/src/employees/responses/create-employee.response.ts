@@ -1,3 +1,3 @@
-import { EmployeeResponse } from "../entities/employee.entity";
+import { EmployeeResponse } from "./employee.response";
 
 export interface CreateEmployeeResponse extends EmployeeResponse {}

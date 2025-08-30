@@ -1,0 +1,6 @@
+export enum ScopeType {
+  GLOBAL = "GLOBAL",
+  ORGANIZATION = "ORGANIZATION",
+  HIERARCHY = "HIERARCHY",
+  SELF = "SELF",
+}

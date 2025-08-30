@@ -4,6 +4,8 @@ export interface EmployeeResponse {
   email: string;
   organizationId: string;
   userId?: string;
+  currentLeaderId?: string;
+  currentPeoplePartnerId?: string;
   status: string;
   createdAt: Date;
   updatedAt: Date;

@@ -5,12 +5,14 @@ import {
   CreateAggregateProps,
 } from "@app/common/domain/aggregate-root";
 import { UserStatus } from "@app/modules/auth/enums/user-status";
+import { UserAuthType } from "@app/modules/auth/enums/user-auth-type";
 
 export type UserProps = BaseProps & {
   organizationId: string;
   externalId?: string;
   email: string;
   status: UserStatus;
+  authType: UserAuthType;
 };
 
 export type CreateUserProps = CreateAggregateProps<UserProps>;
@@ -34,6 +36,10 @@ export class User extends AggregateRoot<UserProps> {
 
   get status() {
     return this.props.status;
+  }
+
+  get authType() {
+    return this.props.authType;
   }
 
   static create(props: CreateUserProps) {

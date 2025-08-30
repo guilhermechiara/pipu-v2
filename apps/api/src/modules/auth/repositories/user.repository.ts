@@ -2,6 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "@app/infrastructure/database/prisma.service";
 import { User } from "@app/modules/auth/entities/user";
 import { UserMapper } from "@app/modules/auth/mappers/user.mapper";
+import { Prisma } from "@prisma/client";
+import {
+  DeleteByIdWithOrganizationId,
+  FindByIdWithOrganizationId,
+} from "@app/common/types/repository.types";
 
 @Injectable()
 export class UserRepository {
@@ -10,8 +15,10 @@ export class UserRepository {
     private readonly _userMapper: UserMapper,
   ) {}
 
-  async save(input: User): Promise<void> {
-    await this._prismaService.user.upsert({
+  async save(input: User, tx?: Prisma.TransactionClient): Promise<void> {
+    const client = this._prismaService.getClient(tx);
+
+    await client.user.upsert({
       where: {
         id: input.id,
       },
@@ -20,28 +27,41 @@ export class UserRepository {
     });
   }
 
-  async findById(id: string, organizationId: string): Promise<User> {
-    const user = await this._prismaService.user.findUnique({
+  async findById(
+    input: FindByIdWithOrganizationId,
+    tx?: Prisma.TransactionClient,
+  ): Promise<User> {
+    const client = this._prismaService.getClient(tx);
+    const user = await client.user.findUnique({
       where: {
-        id,
-        organizationId,
+        id: input.id,
+        organizationId: input.organizationId,
       },
     });
 
     return user ? this._userMapper.toModel(user) : null;
   }
 
-  async delete(id: string, organizationId: string): Promise<void> {
-    await this._prismaService.user.delete({
+  async delete(
+    input: DeleteByIdWithOrganizationId,
+    tx?: Prisma.TransactionClient,
+  ): Promise<void> {
+    const client = this._prismaService.getClient(tx);
+
+    await client.user.delete({
       where: {
-        id,
-        organizationId,
+        id: input.id,
+        organizationId: input.organizationId,
       },
     });
   }
 
-  async findByEmail(email: string): Promise<User> {
-    const user = await this._prismaService.user.findFirst({
+  async findByEmail(
+    email: string,
+    tx?: Prisma.TransactionClient,
+  ): Promise<User> {
+    const client = this._prismaService.getClient(tx);
+    const user = await client.user.findFirst({
       where: {
         email,
       },

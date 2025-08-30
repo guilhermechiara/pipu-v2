@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
@@ -8,19 +9,21 @@ datasource db {
 }
 
 model Organization {
-  id               String     @id @unique
-  tradingName      String     @map("trading_name") @db.Text
-  legalName        String     @map("legal_name") @db.Text
-  slug             String     @db.Text
-  document         String     @unique @db.Text
-  status           String     @db.Text
-  documentType     String     @map("document_type") @db.Text
-  financialContact String     @map("financial_contact") @db.Text
-  externalId       String     @unique @map("external_id") @db.Text
-  createdAt        DateTime   @default(now()) @map("created_at")
-  updatedAt        DateTime   @updatedAt() @map("updated_at")
-  employees        Employee[]
-  users            User[]
+  id                     String                  @id @unique
+  tradingName            String                  @map("trading_name") @db.Text
+  legalName              String                  @map("legal_name") @db.Text
+  slug                   String                  @db.Text
+  document               String                  @unique @db.Text
+  status                 String                  @db.Text
+  documentType           String                  @map("document_type") @db.Text
+  financialContact       String                  @map("financial_contact") @db.Text
+  externalId             String                  @unique @map("external_id") @db.Text
+  createdAt              DateTime                @default(now()) @map("created_at")
+  updatedAt              DateTime                @updatedAt() @map("updated_at")
+  employees              Employee[]
+  users                  User[]
+  employeeHierarchyNodes EmployeeHierarchyNode[]
+  permissions            Permission[]
 
   @@map("organizations")
 }
@@ -32,6 +35,7 @@ model User {
   externalId     String?      @unique @map("external_id") @db.Text
   email          String       @db.Text
   status         String       @db.Text
+  authType       String       @default("EMPLOYEE") @map("auth_type") @db.Text
   createdAt      DateTime     @default(now()) @map("created_at")
   updatedAt      DateTime     @updatedAt() @map("updated_at")
   employees      Employee[]
@@ -40,16 +44,62 @@ model User {
 }
 
 model Employee {
-  id             String       @id @unique
+  id                     String                  @id @unique
+  organization           Organization            @relation(fields: [organizationId], references: [id])
+  organizationId         String                  @map("organization_id") @db.Text
+  user                   User?                   @relation(fields: [userId], references: [id])
+  userId                 String                  @map("user_id") @db.Text
+  fullName               String                  @map("full_name") @db.Text
+  status                 String                  @db.Text
+  email                  String                  @db.Text
+  currentLeader          Employee?               @relation(fields: [currentLeaderId], references: [id], name: "LedEmployees")
+  currentLeaderId        String?                 @map("current_leader_id") @db.Text
+  ledEmployees           Employee[]              @relation("LedEmployees")
+  currentPeoplePartnerId String?                 @map("current_people_partner_id") @db.Text
+  currentPeoplePartner   Employee?               @relation(fields: [currentPeoplePartnerId], references: [id], name: "ManagedEmployees")
+  managedEmployees       Employee[]              @relation("ManagedEmployees")
+  hierarchyNodes         EmployeeHierarchyNode[]
+  createdAt              DateTime                @default(now()) @map("created_at")
+  updatedAt              DateTime                @updatedAt() @map("updated_at")
+
+  @@map("employees")
+}
+
+model EmployeeHierarchyNode {
+  id             String       @id @unique @db.Text
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id") @db.Text
-  user           User?        @relation(fields: [userId], references: [id])
-  userId         String       @map("user_id") @db.Text
-  fullName       String       @map("full_name") @db.Text
-  status         String       @db.Text
-  email          String       @db.Text
+  employeeId     String       @map("employee_id") @db.Text
+  employee       Employee     @relation(fields: [employeeId], references: [id])
+  path           String       @db.Text
+  type           String       @db.Text
   createdAt      DateTime     @default(now()) @map("created_at")
   updatedAt      DateTime     @updatedAt() @map("updated_at")
 
-  @@map("employees")
+  @@map("employee_hierarchy_nodes")
+}
+
+model Permission {
+  id             String            @id @unique @db.Text
+  name           String            @db.Text
+  description    String            @db.Text
+  organization   Organization?     @relation(fields: [organizationId], references: [id])
+  organizationId String?           @db.Text
+  scopes         PermissionScope[]
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt() @map("updated_at")
+
+  @@map("permissions")
+}
+
+model PermissionScope {
+  id          String       @id @unique @db.Text
+  action      String       @db.Text
+  subject     String       @db.Text
+  type        String       @db.Text
+  permissions Permission[]
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt() @map("updated_at")
+
+  @@map("permission_scopes")
 }

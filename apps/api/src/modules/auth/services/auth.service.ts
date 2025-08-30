@@ -178,6 +178,12 @@ export class AuthService {
     };
   }
 
+  /**
+   * Verifies an access token and extracts authenticated user details from the token's payload.
+   *
+   * @param {string} accessToken - The JWT access token to be verified.
+   * @return {Promise<AuthenticatedUser>} A promise that resolves to an AuthenticatedUser object containing details extracted from the token payload.
+   */
   async verifyAccessToken(accessToken: string): Promise<AuthenticatedUser> {
     const { payload } = await jwtVerify(accessToken, this._jwks);
 

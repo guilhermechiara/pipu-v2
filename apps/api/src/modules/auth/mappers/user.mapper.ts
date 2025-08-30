@@ -3,6 +3,7 @@ import { User } from "@app/modules/auth/entities/user";
 import { User as PrismaUser } from "@prisma/client";
 import { UserStatus } from "@app/modules/auth/enums/user-status";
 import { UserResponse } from "@pipu/api";
+import { UserAuthType } from "@app/modules/auth/enums/user-auth-type";
 
 export class UserMapper implements Mapper<User, PrismaUser, UserResponse> {
   toModel(item: PrismaUser): User {
@@ -12,6 +13,7 @@ export class UserMapper implements Mapper<User, PrismaUser, UserResponse> {
       externalId: item.externalId,
       status: item.status as UserStatus,
       organizationId: item.organizationId,
+      authType: item.authType as UserAuthType,
       updatedAt: item.updatedAt,
       createdAt: item.createdAt,
     });
@@ -24,6 +26,7 @@ export class UserMapper implements Mapper<User, PrismaUser, UserResponse> {
       externalId: item.externalId,
       status: item.status,
       organizationId: item.organizationId,
+      authType: item.authType,
       updatedAt: item.updatedAt,
       createdAt: item.createdAt,
     };

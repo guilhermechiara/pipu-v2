@@ -15,6 +15,8 @@ export class EmployeeMapper extends Mapper<Employee, PrismaEmployee, any> {
       organizationId: item.organizationId,
       userId: item.userId,
       status: item.status,
+      currentLeaderId: item.currentLeaderId,
+      currentPeoplePartnerId: item.currentPeoplePartnerId,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     });
@@ -28,6 +30,8 @@ export class EmployeeMapper extends Mapper<Employee, PrismaEmployee, any> {
       organizationId: item.organizationId,
       userId: item.userId,
       status: item.status as EmployeeStatus,
+      currentLeaderId: item.currentLeaderId,
+      currentPeoplePartnerId: item.currentPeoplePartnerId,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     };

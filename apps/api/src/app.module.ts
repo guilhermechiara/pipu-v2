@@ -6,6 +6,8 @@ import { databaseConfig } from "./config";
 import { MessagingModule } from "./infrastructure/messaging/messaging.module";
 import { OrganizationsModule } from "@app/modules/organizations/organizations.module";
 import { AuthModule } from "@app/modules/auth/auth.module";
+import { PermissionsModule } from "@app/modules/permissions/permissions.module";
+import { ProfileModule } from "@app/modules/profile/profile.module";
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { AuthModule } from "@app/modules/auth/auth.module";
     DatabaseModule,
     OrganizationsModule,
     EmployeesModule,
+    PermissionsModule,
+    ProfileModule,
   ],
 })
 export class AppModule {}

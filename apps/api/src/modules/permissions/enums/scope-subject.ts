@@ -1,0 +1,7 @@
+export enum ScopeSubject {
+  ALL = "ALL",
+  ORGANIZATION = "ORGANIZATION",
+  EMPLOYEE = "EMPLOYEE",
+  AUTH = "AUTH",
+  PERMISSION = "PERMISSION",
+}
