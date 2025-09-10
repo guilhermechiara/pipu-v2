@@ -3,7 +3,10 @@ import { Employee } from "@app/modules/employees/entities/employee";
 import { EmployeeMapper } from "../mappers/employee.mapper";
 import { PrismaService } from "@app/infrastructure/database/prisma.service";
 import { Prisma } from "@prisma/client";
-import { FindByIdWithOrganizationId } from "@app/common/types/repository.types";
+import {
+  FindByIdWithOrganizationId,
+  FindByOrganizationId,
+} from "@app/common/types/repository.types";
 
 @Injectable()
 export class EmployeeRepository {
@@ -67,5 +70,20 @@ export class EmployeeRepository {
         organizationId: input.organizationId,
       },
     });
+  }
+
+  public async findByOrganization(
+    input: FindByOrganizationId,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Employee[]> {
+    const client = this._prismaService.getClient();
+
+    const employees = await client.employee.findMany({
+      where: {
+        organizationId: input.organizationId,
+      },
+    });
+
+    return employees.map((employee) => this._employeeMapper.toModel(employee));
   }
 }

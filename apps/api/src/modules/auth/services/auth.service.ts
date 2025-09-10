@@ -5,8 +5,10 @@ import { ConfigType } from "@nestjs/config";
 import { AuthenticationResponse } from "@pipu/api";
 import { UserRepository } from "@app/modules/auth/repositories/user.repository";
 import { UserNotAllowedException } from "@app/modules/auth/exceptions/user-not-allowed.exception";
-import { createRemoteJWKSet, jwtVerify } from "jose";
+import { createRemoteJWKSet, errors as JoseErrors, jwtVerify } from "jose";
 import { AuthenticatedUser } from "@app/modules/auth/types/authenticated-user";
+import { WorkOSErrorsMapper } from "@app/modules/auth/mappers/workos-errors.mapper";
+import { TokenExpiredException } from "@app/modules/auth/exceptions/token-expired.exception";
 
 @Injectable()
 export class AuthService {
@@ -15,6 +17,7 @@ export class AuthService {
 
   constructor(
     private readonly _userRepository: UserRepository,
+    private readonly _workOSErrorsMapper: WorkOSErrorsMapper,
     @Inject(authConfig.KEY)
     private _authConfig: ConfigType<typeof authConfig>,
   ) {
@@ -36,10 +39,14 @@ export class AuthService {
     id: string;
     name: string;
   }): Promise<Organization> {
-    return this._workOSClient.organizations.createOrganization({
-      externalId: input.id,
-      name: input.name,
-    });
+    try {
+      return this._workOSClient.organizations.createOrganization({
+        externalId: input.id,
+        name: input.name,
+      });
+    } catch (error) {
+      throw this._workOSErrorsMapper.mapIfWorkOSError(error);
+    }
   }
 
   /**
@@ -49,10 +56,14 @@ export class AuthService {
    * @return {Promise<void>} A promise that resolves when the organization has been successfully deleted.
    */
   async deleteExternalOrganization(id: string): Promise<void> {
-    const externalOrganization = await this.findOrganizationByExternalId(id);
+    try {
+      const externalOrganization = await this.findOrganizationByExternalId(id);
 
-    if (externalOrganization) {
-      await this._workOSClient.organizations.deleteOrganization(id);
+      if (externalOrganization) {
+        await this._workOSClient.organizations.deleteOrganization(id);
+      }
+    } catch (error) {
+      throw this._workOSErrorsMapper.mapIfWorkOSError(error);
     }
   }
 
@@ -63,9 +74,13 @@ export class AuthService {
    * @return {Promise<User | null>} A promise that resolves to the user object if found, or null if no user is found.
    */
   async findByExternalUserId(externalUserId: string): Promise<User | null> {
-    return this._workOSClient.userManagement.getUserByExternalId(
-      externalUserId,
-    );
+    try {
+      return this._workOSClient.userManagement.getUserByExternalId(
+        externalUserId,
+      );
+    } catch (error) {
+      throw this._workOSErrorsMapper.mapIfWorkOSError(error);
+    }
   }
 
   /**
@@ -83,20 +98,24 @@ export class AuthService {
     organizationId: string;
     externalOrganizationId: string;
   }): Promise<User> {
-    const user = await this._workOSClient.userManagement.createUser({
-      email: input.email,
-      externalId: input.id,
-      metadata: {
-        external_organization_id: input.organizationId,
-      },
-    });
+    try {
+      const user = await this._workOSClient.userManagement.createUser({
+        email: input.email,
+        externalId: input.id,
+        metadata: {
+          external_organization_id: input.organizationId,
+        },
+      });
 
-    await this._workOSClient.userManagement.createOrganizationMembership({
-      userId: user.id,
-      organizationId: input.externalOrganizationId,
-    });
+      await this._workOSClient.userManagement.createOrganizationMembership({
+        userId: user.id,
+        organizationId: input.externalOrganizationId,
+      });
 
-    return user;
+      return user;
+    } catch (error) {
+      throw this._workOSErrorsMapper.mapIfWorkOSError(error);
+    }
   }
 
   /**
@@ -106,17 +125,21 @@ export class AuthService {
    * @return {Promise<void>} A promise that resolves once the user and their memberships are deleted.
    */
   async deleteExternalUser(externalUserId: string): Promise<void> {
-    await this._workOSClient.userManagement.deleteUser(externalUserId);
+    try {
+      await this._workOSClient.userManagement.deleteUser(externalUserId);
 
-    const memberships =
-      await this._workOSClient.userManagement.listOrganizationMemberships({
-        userId: externalUserId,
-      });
+      const memberships =
+        await this._workOSClient.userManagement.listOrganizationMemberships({
+          userId: externalUserId,
+        });
 
-    for (const membership of memberships.data) {
-      await this._workOSClient.userManagement.deleteOrganizationMembership(
-        membership.id,
-      );
+      for (const membership of memberships.data) {
+        await this._workOSClient.userManagement.deleteOrganizationMembership(
+          membership.id,
+        );
+      }
+    } catch (error) {
+      throw this._workOSErrorsMapper.mapIfWorkOSError(error);
     }
   }
 
@@ -129,9 +152,13 @@ export class AuthService {
   async findOrganizationByExternalId(
     externalId: string,
   ): Promise<Organization | null> {
-    return this._workOSClient.organizations.getOrganizationByExternalId(
-      externalId,
-    );
+    try {
+      return this._workOSClient.organizations.getOrganizationByExternalId(
+        externalId,
+      );
+    } catch (error) {
+      throw this._workOSErrorsMapper.mapIfWorkOSError(error);
+    }
   }
 
   /**
@@ -148,9 +175,13 @@ export class AuthService {
       throw new UserNotAllowedException();
     }
 
-    await this._workOSClient.userManagement.createMagicAuth({
-      email: email,
-    });
+    try {
+      await this._workOSClient.userManagement.createMagicAuth({
+        email: email,
+      });
+    } catch (error) {
+      throw this._workOSErrorsMapper.mapIfWorkOSError(error);
+    }
   }
 
   /**
@@ -164,18 +195,22 @@ export class AuthService {
     email: string,
     code: string,
   ): Promise<AuthenticationResponse> {
-    const auth =
-      await this._workOSClient.userManagement.authenticateWithMagicAuth({
-        email: email,
-        code: code,
-        clientId: this._authConfig.client_id,
-      });
+    try {
+      const auth =
+        await this._workOSClient.userManagement.authenticateWithMagicAuth({
+          email: email,
+          code: code,
+          clientId: this._authConfig.client_id,
+        });
 
-    return {
-      organizationId: auth.organizationId,
-      accessToken: auth.accessToken,
-      refreshToken: auth.refreshToken,
-    };
+      return {
+        organizationId: auth.organizationId,
+        accessToken: auth.accessToken,
+        refreshToken: auth.refreshToken,
+      };
+    } catch (error) {
+      throw this._workOSErrorsMapper.mapIfWorkOSError(error);
+    }
   }
 
   /**
@@ -185,21 +220,29 @@ export class AuthService {
    * @return {Promise<AuthenticatedUser>} A promise that resolves to an AuthenticatedUser object containing details extracted from the token payload.
    */
   async verifyAccessToken(accessToken: string): Promise<AuthenticatedUser> {
-    const { payload } = await jwtVerify(accessToken, this._jwks);
+    try {
+      const { payload } = await jwtVerify(accessToken, this._jwks);
 
-    return {
-      organizationId: payload["urn:pipu:organization_id"] as string,
-      userId: payload["urn:pipu:user_id"] as string,
-      exp: payload.exp,
-      iat: payload.iat,
-      sid: payload["sid"] as string,
-      jti: payload.jti,
-      externalOrganizationId: payload["org_id"] as string,
-      role: payload["role"] as string,
-      permissions: payload["permissions"] as string[],
-      externalUserId: payload.sub,
-      sub: payload.sub,
-      featureFlags: payload["feature_flags"] as string[],
-    };
+      return {
+        organizationId: payload["urn:pipu:organization_id"] as string,
+        userId: payload["urn:pipu:user_id"] as string,
+        exp: payload.exp,
+        iat: payload.iat,
+        sid: payload["sid"] as string,
+        jti: payload.jti,
+        externalOrganizationId: payload["org_id"] as string,
+        role: payload["role"] as string,
+        permissions: payload["permissions"] as string[],
+        externalUserId: payload.sub,
+        sub: payload.sub,
+        featureFlags: payload["feature_flags"] as string[],
+      };
+    } catch (error) {
+      if (error instanceof JoseErrors.JWTExpired) {
+        throw new TokenExpiredException();
+      }
+
+      throw error;
+    }
   }
 }

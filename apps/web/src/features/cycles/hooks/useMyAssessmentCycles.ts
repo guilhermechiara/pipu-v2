@@ -1,4 +1,4 @@
-import { useApiSuspenseQuery } from "../../../lib/api/hooks";
+import { useApiSuspenseQuery } from "../../../lib/api/query-hooks";
 import { AssessmentCyclesResponse } from "../types/assessmentCycle";
 
 export function useMyAssessmentCycles() {

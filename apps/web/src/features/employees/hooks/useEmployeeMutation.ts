@@ -1,4 +1,4 @@
-import { useApiMutation } from "../../../lib/api/hooks";
+import { useApiMutation } from "../../../lib/api/query-hooks";
 import {
   CreateEmployeeRequest,
   CreateEmployeeResponse,

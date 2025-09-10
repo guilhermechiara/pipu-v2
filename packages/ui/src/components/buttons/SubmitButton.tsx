@@ -17,6 +17,7 @@ const SubmitButton = ({
       type="submit"
       disabled={isPending}
       variant="default"
+      size="lg"
       className={className}
     >
       {children}

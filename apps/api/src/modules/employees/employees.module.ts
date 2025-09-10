@@ -11,6 +11,7 @@ import { EmployeesService } from "@app/modules/employees/services/employees.serv
 import { EmployeeHierarchyNodesService } from "@app/modules/employees/services/employee-hierarchy-nodes.service";
 import { ChangeLeaderCommand } from "@app/modules/employees/commands/change-leader.command";
 import { ChangePeoplePartnerCommand } from "@app/modules/employees/commands/change-people-partner.command";
+import { ListEmployeesQuery } from "@app/modules/employees/queries/list-employees.query";
 
 @Module({
   imports: [DatabaseModule],
@@ -25,6 +26,7 @@ import { ChangePeoplePartnerCommand } from "@app/modules/employees/commands/chan
     CreateEmployeeCommand,
     ChangeLeaderCommand,
     ChangePeoplePartnerCommand,
+    ListEmployeesQuery,
   ],
   controllers: [EmployeesController],
 })

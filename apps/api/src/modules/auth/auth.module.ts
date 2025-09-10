@@ -10,6 +10,7 @@ import { PassportModule } from "@nestjs/passport";
 import { APP_GUARD } from "@nestjs/core";
 import { AuthGuard } from "@app/modules/auth/guards/auth.guard";
 import { MagicAuthStrategy } from "@app/modules/auth/strategies/magic-auth.strategy";
+import { WorkOSErrorsMapper } from "@app/modules/auth/mappers/workos-errors.mapper";
 
 @Global()
 @Module({
@@ -24,6 +25,7 @@ import { MagicAuthStrategy } from "@app/modules/auth/strategies/magic-auth.strat
       useClass: AuthGuard,
     },
     MagicAuthStrategy,
+    WorkOSErrorsMapper,
   ],
   controllers: [AuthController],
   exports: [AuthService, UsersService, UserRepository, UserMapper],

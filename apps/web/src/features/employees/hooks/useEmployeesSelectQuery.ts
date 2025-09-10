@@ -1,4 +1,4 @@
-import { useApiQuery } from "../../../lib/api/hooks";
+import { useApiQuery } from "../../../lib/api/query-hooks";
 import { EmployeePaginatedResponse } from "../types/Employee";
 
 export function useEmployeesSelectQuery({ search }: { search?: string }) {

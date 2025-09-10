@@ -7,10 +7,10 @@ import { Profile } from "../../features/profile/types/profile";
 const ProfileContext = createContext<Profile>({} as Profile);
 
 const ProfileProvider = ({ children }: PropsWithChildren) => {
-  const { data: profile } = useProfile();
+  const profileQuery = useProfile();
 
   return (
-    <ProfileContext.Provider value={profile}>
+    <ProfileContext.Provider value={profileQuery.data}>
       {children}
     </ProfileContext.Provider>
   );

@@ -1,4 +1,4 @@
-import { useApiPatchMutation } from "../../../lib/api/hooks";
+import { useApiPatchMutation } from "../../../lib/api/query-hooks";
 import {
   EditAssessmentCycleRequest,
   EditAssessmentCycleResponse,

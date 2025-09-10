@@ -1,11 +1,11 @@
-import React, { PropsWithChildren, Suspense } from "react";
+import React, { PropsWithChildren } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import "./globals.css";
 import { AppProps } from "next/app";
 import QueryProvider from "../lib/providers/QueryProvider";
-import { ProfileProvider } from "../lib/providers/ProfileProvider";
+import AuthProvider from "../lib/providers/AuthProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,9 +19,7 @@ export default function RootLayout({ children }: PropsWithChildren<AppProps>) {
     <html lang="en">
       <body className={inter.className}>
         <QueryProvider>
-          <Suspense fallback={<p> Global loading </p>}>
-            <ProfileProvider>{children}</ProfileProvider>
-          </Suspense>
+          <AuthProvider>{children}</AuthProvider>
         </QueryProvider>
       </body>
     </html>

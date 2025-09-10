@@ -1,36 +1,46 @@
-import { DataTable } from "@pipu/ui/components";
-import { columns } from "./EmployeeTableColumns";
-import { Employee } from "../types/Employee";
+"use client";
 
-async function getData(): Promise<Employee[]> {
-  return Array.from({ length: 15 }).map((_, index) => ({
-    id: (index + 1).toString(),
-    name: "Ross Geller",
-    role: {
-      id: "asduhu",
-      name: "CEO",
-    },
-    leadership: {
-      id: "123123",
-      name: "Someone very smart",
-    },
-    chapter: "Tecnologia",
-    email: "ross.geller@pipu.com",
-    peoplePartner: {
-      id: "123123",
-      name: "Someone very smart",
-    },
-    status: "active",
-  }));
+import { Button, DataTable } from "@pipu/ui/components";
+import { useEmployeesQueryOptions } from "../hooks/useEmployeesQuery";
+import { useState, useTransition } from "react";
+import { columns } from "./EmployeeTableColumns";
+import { getApiClient } from "../../../lib/api/api-client";
+import { useQuery } from "@tanstack/react-query";
+
+export interface EmployeeTableProps {
+  initialSearch: string;
 }
 
-export async function EmployeeTable() {
-  const data = await getData();
+export function EmployeeTable({ initialSearch }: EmployeeTableProps) {
+  const client = getApiClient();
+  const [search, setSearch] = useState<string>(initialSearch);
+  const [isPending, startTransition] = useTransition();
+
+  const { isLoading, isFetching, data, refetch } = useQuery({
+    ...useEmployeesQueryOptions(client, { search }),
+    placeholderData: (prev) => prev,
+  });
+
+  const handleSearch = () => {
+    startTransition(() => {
+      setSearch("123444");
+    });
+  };
+
+  if (isLoading || !data) {
+    return <p>Loading 222...</p>;
+  }
 
   return (
     <>
       <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={data} />
+        <div className={isFetching ? "opacity-50" : ""}>
+          <DataTable columns={columns} data={data} />
+
+          <Button onClick={handleSearch}>Revalidate</Button>
+
+          {search}
+        </div>
       </div>
     </>
   );

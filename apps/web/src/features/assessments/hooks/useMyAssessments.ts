@@ -1,4 +1,4 @@
-import { useApiSuspenseQuery } from "../../../lib/api/hooks";
+import { useApiSuspenseQuery } from "../../../lib/api/query-hooks";
 import { AssessmentsResponse } from "../types/assessment";
 
 export function useMyAssessments() {

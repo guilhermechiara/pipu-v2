@@ -29,6 +29,6 @@ export class AuthController {
     @Body(new ZodValidationPipe(VerifyCodeRequestSchema))
     input: VerifyCodeRequest,
   ): Promise<AuthenticationResponse> {
-    return this._authService.verifyCode(input.email, input.code);
+    return await this._authService.verifyCode(input.email, input.code);
   }
 }

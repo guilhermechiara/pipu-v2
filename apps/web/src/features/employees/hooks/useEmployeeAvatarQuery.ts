@@ -1,4 +1,4 @@
-import { useApiSuspenseQuery } from "../../../lib/api/hooks";
+import { useApiSuspenseQuery } from "../../../lib/api/query-hooks";
 import { EmployeeProfile } from "../types/EmployeeProfile";
 
 export function useEmployeeAvatarQuery({ id }: { id: string }) {

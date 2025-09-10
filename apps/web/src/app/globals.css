@@ -2,6 +2,7 @@
 
 :root {
     --sidebar: var(--color-blue-tertiary);
+    --sidebar-accent: oklch(0.9 0.0533 190.15);
 }
 
 @theme {

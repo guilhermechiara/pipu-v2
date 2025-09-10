@@ -13,12 +13,12 @@ export class ZodValidationPipe implements PipeTransform {
       return this.schema.parse(input);
     } catch (exception) {
       if (exception instanceof ZodError) {
-        const errors = exception.issues.map<ExceptionProps>((error) => ({
+        const error = exception.issues.map<ExceptionProps>((error) => ({
           code: ERROR_CODES.HTTP.BAD_REQUEST,
           description: `${error.path.join(".")} ${error.message}`,
-        }));
+        }))[0];
 
-        throw new RequestValidationException(errors);
+        throw new RequestValidationException(error);
       }
 
       throw new RequestValidationException({

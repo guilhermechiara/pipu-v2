@@ -1,5 +1,3 @@
-"use client";
-
 import { LoginForm } from "../../../features/auth/components/LoginForm";
 import MainImage from "../../../../public/images/people_mountain.png";
 import Image from "next/image";
@@ -18,7 +16,7 @@ export default function Page() {
       </div>
 
       <div className="h-full bg-background flex justify-center items-center col-span-3">
-        <LoginForm onSuccess={() => alert("success")} />
+        <LoginForm />
       </div>
     </div>
   );

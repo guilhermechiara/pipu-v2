@@ -17,12 +17,13 @@ import { ActionDialog } from "../../../components/dialogs/ActionDialog";
 import { UpdateEmployeeLeader } from "./UpdateEmployeeLeader";
 import { UpdateEmployeeRole } from "./UpdateEmployeeRole";
 import { UpdateEmployeeSalary } from "./UpdateEmployeeSalary";
+import { EmployeeResponse } from "@pipu/api";
 
-export const columns: ColumnDef<Employee>[] = [
+export const columns: ColumnDef<EmployeeResponse>[] = [
   {
     accessorKey: "name",
     header: "Nome",
-    cell: ({ row }) => <div className="w-48">{row.original.name}</div>,
+    cell: ({ row }) => <div className="w-48">{row.original.fullName}</div>,
   },
   {
     accessorKey: "email",
@@ -31,7 +32,7 @@ export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "role",
     header: "Papel",
-    cell: ({ row }) => <div className="w-24">{row.original.role.name}</div>,
+    cell: ({ row }) => <div className="w-24">{"Testing"}</div>,
   },
   {
     accessorKey: "chapter",

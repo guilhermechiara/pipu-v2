@@ -64,8 +64,6 @@ export const NewEmployeeForm = () => {
   }, [isSuccess]);
 
   function handleSubmit(data: NewEmployeeFormValues) {
-    console.log(data);
-
     mutate({
       name: data.name,
       email: data.email,

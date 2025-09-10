@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
 import { CreateEmployeeCommand } from "../commands/create-employee.command";
 import { ZodValidationPipe } from "@app/common/pipes/zod-validation.pipe";
 import { CreateEmployeeRequest, CreateEmployeeRequestSchema } from "@pipu/api";
@@ -7,6 +7,8 @@ import { AuthenticatedUser } from "@app/modules/auth/types/authenticated-user";
 import { AuthService } from "@app/modules/auth/services/auth.service";
 import { ChangeLeaderCommand } from "@app/modules/employees/commands/change-leader.command";
 import { ChangePeoplePartnerCommand } from "@app/modules/employees/commands/change-people-partner.command";
+import { ListEmployeesQuery } from "@app/modules/employees/queries/list-employees.query";
+import { sleep } from "@app/common/utils/sleep";
 
 @Controller("employees")
 export class EmployeesController {
@@ -14,6 +16,7 @@ export class EmployeesController {
     private readonly _createEmployeeCommand: CreateEmployeeCommand,
     private readonly _changeLeaderCommand: ChangeLeaderCommand,
     private readonly _changePeoplePartnerCommand: ChangePeoplePartnerCommand,
+    private readonly _listEmployeesQuery: ListEmployeesQuery,
     private readonly _authService: AuthService,
   ) {}
 
@@ -55,6 +58,12 @@ export class EmployeesController {
       peoplePartnerId: input.peoplePartnerId,
       employeeId: employeeId,
       user,
+    });
+  }
+  @Get()
+  public async list(@CurrentUser() user: AuthenticatedUser) {
+    return this._listEmployeesQuery.execute({
+      organizationId: user.organizationId,
     });
   }
 }

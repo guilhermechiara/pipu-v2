@@ -1,3 +1,5 @@
+export type FindByOrganizationId = { organizationId: string };
+
 export type FindByIdWithOrganizationId = {
   id: string;
   organizationId: string;

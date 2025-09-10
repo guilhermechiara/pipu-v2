@@ -1,5 +1,8 @@
-import { useApiPatchMutation } from "../../../lib/api/hooks";
-import { UpdateEmployeeRequest, UpdateEmployeeResponse } from "../types/UpdateEmployee";
+import { useApiPatchMutation } from "../../../lib/api/query-hooks";
+import {
+  UpdateEmployeeRequest,
+  UpdateEmployeeResponse,
+} from "../types/UpdateEmployee";
 
 export function useEmployeeUpdateMutation({
   id,
@@ -11,7 +14,7 @@ export function useEmployeeUpdateMutation({
   return useApiPatchMutation<UpdateEmployeeResponse, UpdateEmployeeRequest>(
     `/employees/${id}`,
     {
-      onSuccess
+      onSuccess,
     },
   );
 }

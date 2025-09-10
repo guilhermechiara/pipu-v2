@@ -1,4 +1,4 @@
-import { useApiQuery } from "../../../lib/api/hooks";
+import { useApiQuery } from "../../../lib/api/query-hooks";
 import { PaginatedChaptersResponse } from "../types/chapter";
 
 export function useChaptersSelectQuery({ search }: { search?: string }) {
